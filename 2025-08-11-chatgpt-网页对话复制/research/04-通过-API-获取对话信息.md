@@ -1,0 +1,4 @@
+- 对话 url: https://chatgpt.com/c/6899bcf8-2004-832f-87cd-70c9247324fc
+- 对话 id: `6899bcf8-2004-832f-87cd-70c9247324fc`
+- api url: `https://chatgpt.com/backend-api/conversation/6899bcf8-2004-832f-87cd-70c9247324fc`
+- GET 请求，需要带 header: authorization
