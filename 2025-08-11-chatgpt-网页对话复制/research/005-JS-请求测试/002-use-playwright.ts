@@ -1,7 +1,7 @@
 import { chromium, type Browser, type Page } from "playwright"
 import { API_URL, AUTH, USER_AGENT } from "./lib/consts"
 
-const fetchWithPlaywright = async (api_url: string, auth: string): Promise<string> => {
+const fetchWithPlaywright = async (api_url: string, auth: string): Promise<object> => {
   let browser: Browser | undefined
   let page: Page | undefined
 
@@ -33,30 +33,23 @@ const fetchWithPlaywright = async (api_url: string, auth: string): Promise<strin
     if (response) {
       // 获取页面内容
       const content = await page.content()
-      
-      // 等待页面加载完成 - 使用更可靠的等待策略
-      await page.waitForLoadState("networkidle")
-      
-      // 执行页面 JavaScript
-      const jsResult = await page.evaluate(() => {
-        // 这里可以执行任何页面上的 JavaScript
-        return {
-          url: window.location.href,
-          title: document.title,
-          userAgent: navigator.userAgent,
-          cookies: document.cookie
-        }
-      })
-      
-      return content
-      
-    } else {
-      return "页面访问失败"
+      // 获取 <pre> 中的内容
+      const preContent = content.match(/<pre>(.*?)<\/pre>/s)?.[1]
+      if (!preContent) {
+        throw new Error("无法获取 json 信息")
+      }
+      const jsonData = JSON.parse(preContent)
+      return jsonData
     }
+
+    throw new Error("页面访问失败")
     
   } catch (error) {
     console.error("❌ 请求失败:", error)
-    return error instanceof Error ? error.message : String(error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : String(error)
+    }
   } finally {
     // 关闭浏览器
     if (browser) {
