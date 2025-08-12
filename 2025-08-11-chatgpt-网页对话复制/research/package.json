@@ -1,0 +1,22 @@
+{
+  "name": "chatgpt-request-research",
+  "version": "1.0.0",
+  "description": "ChatGPT 请求研究项目",
+  "main": "005-测试-ts-请求.ts",
+  "scripts": {
+    "start": "ts-node 005-测试-ts-请求.ts",
+    "build": "tsc 005-测试-ts-请求.ts",
+    "test": "node 005-测试-ts-请求.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0"
+  },
+  "keywords": ["chatgpt", "proxy", "axios", "typescript"],
+  "author": "",
+  "license": "MIT"
+}
