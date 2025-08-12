@@ -6,12 +6,13 @@ export default defineConfig({
   base: "./",
   build: {
     outDir: "dist",
-    emptyOutDir: false,
+    emptyOutDir: true,
     rollupOptions: {
+      input: "./src/index.html",
       output: {
-        entryFileNames: "renderer/[name].js",
-        chunkFileNames: "renderer/[name].js",
-        assetFileNames: "renderer/[name].[ext]"
+        entryFileNames: "assets/[name].[hash].js",
+        chunkFileNames: "assets/[name].[hash].js",
+        assetFileNames: "assets/[name].[hash].[ext]"
       }
     }
   }

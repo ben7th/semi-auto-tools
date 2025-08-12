@@ -10,7 +10,7 @@
     "build": "pnpm run build:renderer && pnpm run build:electron",
     "build:renderer": "vite build",
     "build:electron": "tsc --project electron",
-    "start": "electron ."
+    "start": "electron dist"
   },
   "keywords": [
     "electron",
