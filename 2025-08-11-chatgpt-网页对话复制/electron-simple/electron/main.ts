@@ -58,9 +58,10 @@ ipcMain.handle("read-authorization-file", async () => {
 // 添加 IPC 处理器来发送 HTTP 请求
 ipcMain.handle("send-http-request", async (event, options) => {
   try {
+    console.log("收到 HTTP 请求:", options);
     const { url, method = "GET", headers = {}, body } = options;
     
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const urlObj = new URL(url);
       const isHttps = urlObj.protocol === "https:";
       const client = isHttps ? https : http;
@@ -77,7 +78,10 @@ ipcMain.handle("send-http-request", async (event, options) => {
         }
       };
 
+      console.log("请求选项:", requestOptions);
+
       const req = client.request(requestOptions, (res) => {
+        console.log("收到响应:", res.statusCode, res.statusMessage);
         let data = "";
         
         res.on("data", (chunk) => {
@@ -85,7 +89,9 @@ ipcMain.handle("send-http-request", async (event, options) => {
         });
         
         res.on("end", () => {
+          console.log("响应完成，数据长度:", data.length);
           resolve({
+            success: true,
             status: res.statusCode,
             statusText: res.statusMessage,
             headers: res.headers,
@@ -95,7 +101,9 @@ ipcMain.handle("send-http-request", async (event, options) => {
       });
 
       req.on("error", (error) => {
-        reject({
+        console.error("HTTP 请求错误:", error);
+        resolve({
+          success: false,
           error: error.message,
           code: (error as NodeJS.ErrnoException).code || "UNKNOWN"
         });
@@ -103,7 +111,9 @@ ipcMain.handle("send-http-request", async (event, options) => {
 
       req.on("timeout", () => {
         req.destroy();
-        reject({
+        console.error("HTTP 请求超时");
+        resolve({
+          success: false,
           error: "Request timeout",
           code: "TIMEOUT"
         });
@@ -122,6 +132,7 @@ ipcMain.handle("send-http-request", async (event, options) => {
   } catch (error: unknown) {
     console.error("HTTP 请求失败:", error);
     return {
+      success: false,
       error: error instanceof Error ? error.message : String(error),
       code: "UNKNOWN_ERROR"
     };

@@ -16,6 +16,7 @@ declare global {
         headers?: Record<string, string>;
         body?: string;
       }) => Promise<{
+        success: boolean;
         status?: number;
         statusText?: string;
         headers?: Record<string, string>;

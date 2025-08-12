@@ -4,7 +4,7 @@ import { UIFlex } from "./ui/ui-exports";
 import { requestChatGPT } from "./api/requestChatGPT";
 
 const App: React.FC = () => {
-  const [gptChatUrl, setGptChatUrl] = useState<string>("https://chatgpt.com/c/689a176f-6e58-8326-9aa2-139893112a85");
+  const [gptChatUrl, setGptChatUrl] = useState<string>("https://chatgpt.com/backend-api/conversation/687b4060-ce98-8011-afb1-70e3af4a6146");
   const [authContent, setAuthContent] = useState<string>("");
 
   // 测试 HTTP 请求功能
@@ -19,7 +19,7 @@ const App: React.FC = () => {
         }
       });
       
-      if (response.error) {
+      if (!response.success) {
         console.error("请求失败:", response.error);
       } else {
         console.log("请求成功:", response);

@@ -16,7 +16,7 @@ export const requestChatGPT = async (url: string, authToken: string) => {
       }
     });
 
-    if (response.error) {
+    if (!response.success) {
       console.error("请求失败:", response.error);
       return {
         success: false,
@@ -58,8 +58,8 @@ export const sendHttpRequest = async (options: {
   try {
     const response = await window.electronAPI.sendHttpRequest(options);
     
-    if (response.error) {
-      throw new Error(response.error);
+    if (!response.success) {
+      throw new Error(response.error || "请求失败");
     }
     
     return response;
