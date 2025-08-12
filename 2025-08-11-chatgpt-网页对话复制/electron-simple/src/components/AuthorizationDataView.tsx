@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
+type IAuthorizationDataViewProps = {
+  onAuthContentChange: (content: string) => void;
+}
+
 /** 显示 authorization.txt 文件内容 */
-export const AuthorizationDataView: React.FC = () => {
+export const AuthorizationDataView: React.FC<IAuthorizationDataViewProps> = ({ onAuthContentChange }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [authContent, setAuthContent] = useState<string>("");
   const [authExists, setAuthExists] = useState<boolean>(false);
@@ -15,6 +19,7 @@ export const AuthorizationDataView: React.FC = () => {
         const result = await window.electronAPI.readAuthorizationFileContent();
         setAuthExists(result.exists);
         setAuthContent(result.content);
+        onAuthContentChange(result.content);
       } catch (error) {
         console.error("读取文件失败:", error);
         setAuthExists(false);

@@ -1,58 +1,23 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import { AuthorizationDataView } from "./components/AuthorizationDataView";
+import { UIFlex } from "./ui/ui-exports";
+import { requestChatGPT } from "./api/requestChatGPT";
 
-type AppProps = {};
-
-// 声明全局类型
-declare global {
-  interface Window {
-    electronAPI: {
-      platform: string;
-      version: string;
-      readAuthorizationFileContent: () => Promise<{
-        exists: boolean;
-        content: string;
-        error?: string;
-      }>;
-    };
-  }
-}
-
-const App: React.FC<AppProps> = () => {
-  const [count, setCount] = useState(0);
+const App: React.FC = () => {
+  const [gptChatUrl, setGptChatUrl] = useState<string>("https://chatgpt.com/c/689a176f-6e58-8326-9aa2-139893112a85");
+  const [authContent, setAuthContent] = useState<string>("");
 
   return (
-    <_App>
-      <h1>🚀 Electron + React + TypeScript</h1>
-      <p>这是一个简洁的 Electron 应用示例</p>
-      
-      <_ButtonBox>
-        <_Button onClick={() => setCount(count + 1)}>
-          点击次数: {count}
-        </_Button>
-      </_ButtonBox>
-
-      <AuthorizationDataView />
-    </_App>
+    <UIFlex>
+      <UIFlex>
+        <div>GPT 聊天 URL</div>
+        <input type="text" value={gptChatUrl} onChange={(e) => setGptChatUrl(e.target.value)} />
+      </UIFlex>
+      <AuthorizationDataView onAuthContentChange={setAuthContent} />
+      <div>授权文件内容: {authContent}</div>
+      <button onClick={() => requestChatGPT(gptChatUrl, authContent)}>获取对话信息</button>
+    </UIFlex>
   );
 };
 
 export default App;
-
-const _App = styled.div`
-`;
-
-const _ButtonBox = styled.div`
-  margin: 20px 0;
-`;
-
-const _Button = styled.button`
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-`;
