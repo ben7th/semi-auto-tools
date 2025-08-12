@@ -9,6 +9,20 @@ declare global {
         content: string;
         error?: string;
       }>;
+      // 添加通过主进程发送 HTTP 请求的功能
+      sendHttpRequest: (options: {
+        url: string;
+        method?: string;
+        headers?: Record<string, string>;
+        body?: string;
+      }) => Promise<{
+        status?: number;
+        statusText?: string;
+        headers?: Record<string, string>;
+        data?: string;
+        error?: string;
+        code?: string;
+      }>;
     };
   }
 }

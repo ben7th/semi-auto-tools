@@ -1,6 +1,8 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import * as path from "path";
 import * as fs from "fs";
+import * as https from "https";
+import * as http from "http";
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -50,5 +52,78 @@ ipcMain.handle("read-authorization-file", async () => {
   } catch (error: unknown) {
     console.error("读取 authorization.txt 文件失败:", error);
     return { exists: false, content: "", error: error instanceof Error ? error.message : String(error) };
+  }
+});
+
+// 添加 IPC 处理器来发送 HTTP 请求
+ipcMain.handle("send-http-request", async (event, options) => {
+  try {
+    const { url, method = "GET", headers = {}, body } = options;
+    
+    return new Promise((resolve, reject) => {
+      const urlObj = new URL(url);
+      const isHttps = urlObj.protocol === "https:";
+      const client = isHttps ? https : http;
+      
+      const requestOptions = {
+        hostname: urlObj.hostname,
+        port: urlObj.port || (isHttps ? 443 : 80),
+        path: urlObj.pathname + urlObj.search,
+        method: method.toUpperCase(),
+        headers: {
+          "User-Agent": "Electron-App/1.0",
+          "Accept": "*/*",
+          ...headers
+        }
+      };
+
+      const req = client.request(requestOptions, (res) => {
+        let data = "";
+        
+        res.on("data", (chunk) => {
+          data += chunk;
+        });
+        
+        res.on("end", () => {
+          resolve({
+            status: res.statusCode,
+            statusText: res.statusMessage,
+            headers: res.headers,
+            data: data
+          });
+        });
+      });
+
+      req.on("error", (error) => {
+        reject({
+          error: error.message,
+          code: (error as NodeJS.ErrnoException).code || "UNKNOWN"
+        });
+      });
+
+      req.on("timeout", () => {
+        req.destroy();
+        reject({
+          error: "Request timeout",
+          code: "TIMEOUT"
+        });
+      });
+
+      // 设置超时时间
+      req.setTimeout(30000); // 30秒超时
+
+      // 如果有请求体，发送数据
+      if (body) {
+        req.write(body);
+      }
+      
+      req.end();
+    });
+  } catch (error: unknown) {
+    console.error("HTTP 请求失败:", error);
+    return {
+      error: error instanceof Error ? error.message : String(error),
+      code: "UNKNOWN_ERROR"
+    };
   }
 });
