@@ -32,13 +32,8 @@ const fetchWithPlaywright = async (api_url: string, auth: string): Promise<objec
     
     if (response) {
       // 获取页面内容
-      const content = await page.content()
-      // 获取 <pre> 中的内容
-      const preContent = content.match(/<pre>(.*?)<\/pre>/s)?.[1]
-      if (!preContent) {
-        throw new Error("无法获取 json 信息")
-      }
-      const jsonData = JSON.parse(preContent)
+      const rawResponse = await response.text()
+      const jsonData = JSON.parse(rawResponse)
       return jsonData
     }
 
