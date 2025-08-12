@@ -18,27 +18,7 @@ function createWindow(): void {
     mainWindow.webContents.openDevTools();
   } else {
     // 生产环境下加载构建后的文件
-    // 从 dist 目录加载构建后的 React 应用
-    const htmlPath = path.join(__dirname, "index.html");
-    console.log('Loading HTML file:', htmlPath);
-    
-    // 先检查文件是否存在
-    const fs = require('fs');
-    if (fs.existsSync(htmlPath)) {
-      console.log('HTML file exists, loading...');
-      mainWindow.loadFile(htmlPath);
-    } else {
-      console.error('HTML file not found:', htmlPath);
-    }
-    
-    // 监听加载事件
-    mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL) => {
-      console.log('Failed to load:', errorCode, errorDescription, validatedURL);
-    });
-    
-    mainWindow.webContents.on('did-finish-load', () => {
-      console.log('Page loaded successfully');
-    });
+    mainWindow.loadFile(path.join(__dirname, "index.html"));
   }
 }
 
