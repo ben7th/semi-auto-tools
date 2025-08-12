@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 
 type AppProps = {};
 
@@ -6,37 +7,17 @@ const App: React.FC<AppProps> = () => {
   const [count, setCount] = useState(0);
 
   return (
-    <div style={{ 
-      padding: "20px", 
-      fontFamily: "Arial, sans-serif",
-      textAlign: "center" 
-    }}>
+    <_App>
       <h1>🚀 Electron + React + TypeScript</h1>
       <p>这是一个简洁的 Electron 应用示例</p>
       
-      <div style={{ margin: "20px 0" }}>
-        <button 
-          onClick={() => setCount(count + 1)}
-          style={{
-            padding: "10px 20px",
-            fontSize: "16px",
-            backgroundColor: "#007bff",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer"
-          }}
-        >
+      <_ButtonBox>
+        <_Button onClick={() => setCount(count + 1)}>
           点击次数: {count}
-        </button>
-      </div>
+        </_Button>
+      </_ButtonBox>
       
-      <div style={{ 
-        marginTop: "40px", 
-        padding: "20px", 
-        backgroundColor: "#f8f9fa",
-        borderRadius: "10px"
-      }}>
+      <_Description>
         <h3>技术栈</h3>
         <ul style={{ listStyle: "none", padding: 0 }}>
           <li>✅ Electron - 跨平台桌面应用框架</li>
@@ -44,9 +25,36 @@ const App: React.FC<AppProps> = () => {
           <li>✅ TypeScript - 类型安全的 JavaScript</li>
           <li>✅ Vite - 快速构建工具</li>
         </ul>
-      </div>
-    </div>
+      </_Description>
+    </_App>
   );
 };
 
 export default App;
+
+const _App = styled.div`
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  text-align: center;
+`;
+
+const _ButtonBox = styled.div`
+  margin: 20px 0;
+`;
+
+const _Button = styled.button`
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+`;
+
+const _Description = styled.div`
+  margin-top: 40px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+`
