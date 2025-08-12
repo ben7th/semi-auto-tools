@@ -16,6 +16,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
-  "files": ["src/types/electron.d.ts"]
+  "include": ["src"]
 }
